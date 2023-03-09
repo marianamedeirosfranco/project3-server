@@ -14,4 +14,4 @@ const taskSchema = new Schema({
 
 const Task = model("Task", taskSchema);
 
-module.exports = User;
+module.exports = Task;
