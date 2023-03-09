@@ -14,10 +14,10 @@ This is an app to manage unofficial tournaments within communities. The app help
 ## User Stories
 
 -  **404:** As a user I get to see a 404 page with a feedback message if I try to reach a page that does not exist so that I know it's my fault.
--  **Signup:** As an anonymous user I can sign up on the platform so that I can start creating and managing tournaments.
--  **Login:** As a user I can login to the platform so that I can access my profile and start creating and managing tournaments.
+-  **Signup:** As an anonymous user I can sign up on the platform so that I can start creating and managing tasks.
+-  **Login:** As a user I can login to the platform so that I can access my profile and start creating and managing tasks and comments.
 -  **Logout:** As a logged in user I can logout from the platform so no one else can use it.
--  **Profile Page**: As a logged in user I can visit my profile page so that I can access the edit page and see the list of tournaments I have created.
+-  **Profile Page**: As a logged in user I can visit my profile page so that I can access the edit page and see the list of tasks I have created.
 
 
 ## Backlog
@@ -160,7 +160,7 @@ Components:
     importance: { type:String, enum: ['High Priority', 'Important', 'Normal']},
     default: 'Normal' },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
-    date of completion: {}
+    dateOfCompletion: Date,
     comments: {[
       type: Schema.Types.ObjectId, ref: 'Comment'
     ]}
@@ -220,9 +220,9 @@ Components:
 
 The url to your repository and to your deployed project
 
-[Client repository Link](https://github.com/screeeen/project-client)
+[Client repository Link](https://github.com/marianamedeirosfranco/project3-server)
 
-[Server repository Link](https://github.com/screeeen/project-server)
+[Server repository Link](https://github.com/marianamedeirosfranco/project3-client)
 
 [Deployed App Link]()
 

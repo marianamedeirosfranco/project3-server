@@ -9,7 +9,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 router.post('/comments', isAuthenticated, async (req, res, next) => {
   const { description } = req.body;
-  // req.payload - Id, name, e-mail req.payload const _id = 
+  // const _id = req.payload._id;
 
   try {
     const comments = await Comment.create({ description });
@@ -21,6 +21,24 @@ router.post('/comments', isAuthenticated, async (req, res, next) => {
     });
 
     res.json(comments);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+router.delete('/comments/:id', async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.json('The provided comment id is not valid');
+  }
+
+  try {
+    //remove a specific comment from a task
+    const task = await Task.findById(id);
+    await Comment.findByIdAndDelete({ _id: task.comments });
+
+    res.json({ message: `Comment with the id ${id} deleted successfully` });
   } catch (error) {
     res.json(error);
   }
