@@ -16,23 +16,26 @@ const userSchema = new Schema(
     },
     name: {
       type: String,
-      required: [true, "Name is required."]
+      required: [true, "Name is required."],
     },
     imageUrl: {
-        type: String,
-        default: "../",
+      type: String,
+      default: "../",
+    },
+    tasks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Task",
       },
-    tasks: [{ 
-      type: Schema.Types.ObjectId,
-      ref: 'Task' }
     ],
-  comments: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Comment'
-  }]
-},
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+  },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );

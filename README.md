@@ -18,22 +18,11 @@ This is an app to manage unofficial tournaments within communities. The app help
 -  **Login:** As a user I can login to the platform so that I can access my profile and start creating and managing tournaments.
 -  **Logout:** As a logged in user I can logout from the platform so no one else can use it.
 -  **Profile Page**: As a logged in user I can visit my profile page so that I can access the edit page and see the list of tournaments I have created.
--  **Add Tournaments:** As a logged in user I can access the add tournament page so that I can create a new tournament.
--  **Edit Tournaments:** As a logged in user I can access the edit tournament page so that I can edit the tournament I created.
--  **Add Players:** As a user I can add players to a tournament.
--  **View Tournament Table:** As a user I want to see the tournament details, players list and the time table.
--  **View Ranks:** As a user I can see the rankings list for the tournament.
-
-
 
 
 ## Backlog
 
 - Add weather widget
-- lottie interactions
-- users can bet
-- add geolocation to events when creating
-
 
 <br>
 
@@ -52,10 +41,6 @@ This is an app to manage unofficial tournaments within communities. The app help
 | `/tasks/add`           | CreateTasksPage | user only `<PrivateRoute>` | Create new tasks form.                               |
 | `/tasks`               | TasksListPage   | user only `<PrivateRoute>` | Tasks list.                                         |
 | `/tasks/:taskId` | TasksDetailPage | user only `<PrivateRoute>` | Tasks details. Shows players list and other details. |
-| `/commentlist`    | CommentList    | user only `<PrivateRoute>`                              |
-| `/commentlist/:id`    | CommentListDetailPage         | user only `<PrivateRoute>`                  |
-
-
 
 
 ## Components
@@ -77,11 +62,6 @@ Pages:
 - TasksListPage
 
 - TasksDetailsPage
-
-- CommentListPage
-
-- CommentList Details Page
-
   
 
 Components:
@@ -90,9 +70,6 @@ Components:
 - Calendar
 - Navbar
 - Footer
-
-
-
 
 
 
@@ -183,7 +160,11 @@ Components:
     importance: { type:String, enum: ['High Priority', 'Important', 'Normal']},
     default: 'Normal' },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
-}
+    date of completion: {}
+    comments: {[
+      type: Schema.Types.ObjectId, ref: 'Comment'
+    ]}
+ }
 ```
 
 
@@ -195,7 +176,6 @@ Components:
     title: { type: String, required: true },
     description: { type: String },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
-    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }]
 }
 ```
 
@@ -244,7 +224,7 @@ The url to your repository and to your deployed project
 
 [Server repository Link](https://github.com/screeeen/project-server)
 
-[Deployed App Link](http://heroku.com)
+[Deployed App Link]()
 
 ### Slides
 
