@@ -12,13 +12,13 @@ router.post('/comments', async (req, res, next) => {
   try {
     const comments = await Comment.create({ description });
 
-    await Task.findByIdAndUpdate(task, {comments})
+    await Task.findByIdAndUpdate(comments, {
       $push: {
-        tasks: task._id,
+        comments: comments._id,
       },
     });
 
-    res.json(task);
+    res.json(comments);
   } catch (error) {
     res.json(error);
   }

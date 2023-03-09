@@ -10,6 +10,7 @@ const taskSchema = new Schema({
     importance: { type:String, enum: ['High Priority', 'Important', 'Normal']},
     default: 'Normal' },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
+    comments: {type: Schema.Types.ObjectId, ref: 'Comment'}
 });
 
 const Task = model("Task", taskSchema);
