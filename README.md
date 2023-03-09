@@ -1,5 +1,5 @@
 # Project3
-# TOBEDEFINED
+# TOCHECK
 
 <br>
 
@@ -49,11 +49,11 @@ This is an app to manage unofficial tournaments within communities. The app help
 | `/`                          | HomePage             | public `<Route>`           | Home page.                                                |
 | `/user-profile`              | ProfilePage          | user only `<PrivateRoute>` | User and player profile for the current user.             |
 | `/user-profile/edit`         | EditProfilePage      | user only `<PrivateRoute>` | Edit user profile form.                                   |
-| `/tasks/add`           | CreateTournamentPage | user only `<PrivateRoute>` | Create new tournament form.                               |
-| `/tasks`               | TournamentListPage   | user only `<PrivateRoute>` | Tournaments list.                                         |
-| `/tasks/:taskId` | TournamentDetailPage | user only `<PrivateRoute>` | Tournament details. Shows players list and other details. |
-| `/tournament/players/:id`    | PlayerDetailsPage    | user only `<PrivateRoute>` | Single player details.                                    |
-| `/rankings/:tournamentId`    | RankingsPage         | user only `<PrivateRoute>` | Tournament rankings list.                                 |
+| `/tasks/add`           | CreateTasksPage | user only `<PrivateRoute>` | Create new tasks form.                               |
+| `/tasks`               | TasksListPage   | user only `<PrivateRoute>` | Tasks list.                                         |
+| `/tasks/:taskId` | TasksDetailPage | user only `<PrivateRoute>` | Tasks details. Shows players list and other details. |
+| `/commentlist`    | CommentList    | user only `<PrivateRoute>`                              |
+| `/commentlist/:id`    | CommentListDetailPage         | user only `<PrivateRoute>`                  |
 
 
 
@@ -72,15 +72,15 @@ Pages:
 
 - EditProfilePage
 
-- CreateTournamentPage
+- CreateTasksPage
 
-- TournamentListPage
+- TasksListPage
 
-- TournamentDetailsPage
+- TasksDetailsPage
 
-- PlayerDetailsPage
+- CommentListPage
 
-- RankingsPage
+- CommentList Details Page
 
   
 
@@ -112,19 +112,21 @@ Components:
     - `.updateCurrentUser(id, userData)`
     - `.getCurrentUser()`
 
-- **Tournament Service**
+- **Tasks Service**
 
-  - `tournamentService` :
-    - `.addTournament(tournamentData)`
-    - `.getTournaments()`
-    - `.getOneTournament(id)`
-    - `.deleteTournament(id)`
+  - `tasksService` :
+    - `.addTask(taskData)`
+    - `.getTasks()`
+    - `.getOneTask(id)`
+    - `.deleteTask(id)`
 
-- **Player Service**
+- **CommentTask Service**
 
-  - `playerService` :
-    - `.createPlayer(id)`
-    - `.getPlayerDetails(id)`
+  - `commentTask` :
+    - `.createcomment`
+    - `.getcommentdetails(id)`
+    - `.commentTaskList`
+    - `.deleteComment(id)`
 
   
 
@@ -142,12 +144,29 @@ Components:
 
 ```javascript
 {
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-
-	playerProfile: { type: Schema.Types.ObjectId, ref:'Player' },
-  createdTournaments: [ { type: Schema.Types.ObjectId, ref:'Tournament' } ]
-}
+    email: {
+      type: String,
+      required: [true, "Email is required."],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required."],
+    },
+    name: {
+      type: String,
+      required: [true, "Name is required."]
+    },
+    imageUrl: {
+        type: String,
+        default: "../",
+      },
+    tasks: [{ 
+      type: Schema.Types.ObjectId,
+      ref: 'Task' }],
+  }
 ```
 
 
@@ -156,21 +175,27 @@ Components:
 
 ```javascript
  {
-   name: { type: String, required: true },
-   importance: {type: String, required:true}
- }
+    title: { type: String, 
+    required: true },
+    description: { type: String,
+    required: true },
+    status: { type: String, enum: ['Pending', 'In Progress', 'Completed'], 
+    importance: { type:String, enum: ['High Priority', 'Important', 'Normal']},
+    default: 'Normal' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+}
 ```
 
 
 
-**Player model**
+**Comment model**
 
 ```javascript
 {
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  profileImage: { type: String },
-  scores: []
+    title: { type: String, required: true },
+    description: { type: String },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }]
 }
 ```
 
@@ -186,22 +211,17 @@ Components:
 | ----------- | ---------------------- | ---------------------------- | -------------- | ------------ | ------------------------------------------------------------ |
 | GET         | `/auth/profile    `    | Saved session                | 200            | 404          | Check if user is logged in and return profile page           |
 | POST        | `/auth/signup`         | {name, email, password}      | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
-| POST        | `/auth/login`          | {username, password}         | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
+| POST        | `/auth/login`          | {email, password}         | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
 | POST        | `/auth/logout`         |                              | 204            | 400          | Logs out the user                                            |
-| GET         | `/api/tournaments`     |                              |                | 400          | Show all tournaments                                         |
-| GET         | `/api/tournaments/:id` |                              |                |              | Show specific tournament                                     |
-| POST        | `/api/tournaments`     | { name, img, players }       | 201            | 400          | Create and save a new tournament                             |
-| PUT         | `/api/tournaments/:id` | { name, img, players }       | 200            | 400          | edit tournament                                              |
-| DELETE      | `/api/tournaments/:id` |                              | 201            | 400          | delete tournament                                            |
-| GET         | `/api/players/:id`     |                              |                |              | show specific player                                         |
-| POST        | `/api/players`         | { name, img, tournamentId }  | 200            | 404          | add player                                                   |
-| PUT         | `/api/players/:id`     | { name, img }                | 201            | 400          | edit player                                                  |
-| DELETE      | `/api/players/:id`     |                              | 200            | 400          | delete player                                                |
-| GET         | `/api/games`           |                              | 201            | 400          | show games                                                   |
-| GET         | `/api/games/:id`       |                              |                |              | show specific game                                           |
-| POST        | `/api/games`           | {player1,player2,winner,img} |                |              | add game                                                     |
-| PUT         | `/api/games/:id`       | {winner,score}               |                |              | edit game                                                    |
-
+| GET         | `/api/tasks`     |                              |                | 400          | Show all tasks                                        |
+| GET         | `/api/tasks/:id` |                              |                |              | Show specific task                                     |
+| POST        | `/api/tasks `     | { name, img, tasks }       | 201            | 400          | Create and save a new task                            |
+| PUT         | `/api/tasks /:id` | { name, img, tasks }       | 200            | 400          | edit task                                              |
+| DELETE      | `/api/tasks/:id` |                              | 201            | 400          | delete task                                            |
+| GET         | `/api/comment/:id`     |                              |                |              | show specific comment                                         |
+| POST        | `/api/comment`         | { name, taskId }  | 200            | 404          | add comment                                                  |
+| PUT         | `/api/comment/:id`     | { title, description }                | 201            | 400          | edit player                                                  |
+| DELETE      | `/api/comment/:id`     |                              | 200            | 400          | delete comment                                               |
 
 <br>
 
@@ -215,10 +235,6 @@ Components:
 
 
 ## Links
-
-### Trello/Kanban
-
-[Link to your trello board](https://trello.com/b/PBqtkUFX/curasan) or a picture of your physical board
 
 ### Git
 
@@ -236,6 +252,6 @@ The url to your repository and to your deployed project
 
 ### Contributors
 
-FirstName LastName - <github-username> - <linkedin-profile-link>
+Francisco Pereira - <https://github.com/FranciscoManuelPereira> - <https://www.linkedin.com/in/franciscomanuelpereira/>
 
-FirstName LastName - <github-username> - <linkedin-profile-link>
+Mariana Franco - <https://github.com/marianamedeirosfranco> - <https://www.linkedin.com/in/marianamedeirosfranco/>
