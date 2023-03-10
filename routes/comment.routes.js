@@ -7,14 +7,15 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 
 //Create
 
-router.post('/comments', isAuthenticated, async (req, res, next) => {
+router.post('/comments/:id', isAuthenticated, async (req, res, next) => {
   const { description } = req.body;
+  const {id} = req.params
   // const _id = req.payload._id;
 
   try {
     const comments = await Comment.create({ description });
 
-    await Task.findByIdAndUpdate(comments, {
+    await Task.findByIdAndUpdate(id, {
       $push: {
         comments: comments._id,
       },

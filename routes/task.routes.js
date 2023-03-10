@@ -9,10 +9,10 @@ const { isAuthenticated } = require('../middleware/jwt.middleware');
 //Create
 
 router.post('/tasks', isAuthenticated, async (req, res, next) => {
-  const { title, description, status, importance } = req.body;
+  const { title, description, status, importance, date } = req.body;
 
   try {
-    const task = await Task.create({ title, description, status, importance });
+    const task = await Task.create({ title, description, status, importance, date });
 
     res.json(task);
   } catch (error) {
@@ -22,7 +22,7 @@ router.post('/tasks', isAuthenticated, async (req, res, next) => {
 
 //Read (all)
 
-router.get('/tasks', async (req, res, next) => {
+router.get('/tasks', isAuthenticated, async (req, res, next) => {
   try {
     const tasks = await Task.find().populate('comments');
     res.json(tasks);
@@ -33,7 +33,7 @@ router.get('/tasks', async (req, res, next) => {
 
 //Read (by id)
 
-router.get('/tasks/:id', async (req, res, next) => {
+router.get('/tasks/:id', isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -46,9 +46,9 @@ router.get('/tasks/:id', async (req, res, next) => {
 
 //Update
 
-router.put('/tasks/:id', async (req, res, next) => {
+router.put('/tasks/:id', isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
-  const { title, description, status, importance } = req.body;
+  const { title, description, status, importance, date } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.json('The provided task id is not valid');
@@ -57,7 +57,7 @@ router.put('/tasks/:id', async (req, res, next) => {
   try {
     const updatedTask = await Task.findByIdAndUpdate(
       id,
-      { title, description, status, importance },
+      { title, description, status, importance, date },
       { new: true }
     );
 
@@ -69,7 +69,7 @@ router.put('/tasks/:id', async (req, res, next) => {
 
 //Delete
 
-router.delete('/tasks/:id', async (req, res, next) => {
+router.delete('/tasks/:id', isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
