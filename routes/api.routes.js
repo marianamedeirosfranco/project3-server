@@ -16,7 +16,7 @@ const oauth2Client = new google.auth.OAuth2(
 // generate a url that asks permissions for Blogger and Google Calendar scopes
 const scopes = [
   'https://www.googleapis.com/auth/blogger',
-  'https://www.googleapis.com/auth/calendar'
+  'https://www.googleapis.com/auth/calendar',
 ];
 
 const url = oauth2Client.generateAuthUrl({

@@ -10,7 +10,7 @@ const taskSchema = new Schema(
       enum: ["High Priority", "Important", "Normal"],
       default: "Normal",
     },
-    date: { Date },
+    date: { type: Date },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
