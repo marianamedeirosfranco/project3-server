@@ -10,9 +10,11 @@ const { isAuthenticated } = require('../middleware/jwt.middleware');
 
 router.post('/tasks', isAuthenticated, async (req, res, next) => {
   const { title, description, status, importance, date } = req.body;
+  /* ir buscar o id do user */
 
   try {
-    const task = await Task.create({ title, description, status, importance, date });
+    const task = await Task.create({ title, description, status, importance, date, /* user: user._id */ });
+
 
     res.json(task);
   } catch (error) {
@@ -23,8 +25,10 @@ router.post('/tasks', isAuthenticated, async (req, res, next) => {
 //Read (all)
 
 router.get('/tasks', isAuthenticated, async (req, res, next) => {
+   /* ir buscar o id do user */
+
   try {
-    const tasks = await Task.find().populate('comments');
+    const tasks = await Task.find(/* {user: user._id} */).populate('comments');
     res.json(tasks);
   } catch (error) {
     res.json(error);
